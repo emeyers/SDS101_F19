@@ -1,0 +1,551 @@
+---
+title: "Homework 1"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+
+
+
+$\\$
+
+
+
+
+
+The purpose of this homework is gain practice using R and to use randomization methods in R to run hypothesis tests. Please fill in the appropriate code and write answers to all questions in the answer sections, then submit a compiled pdf with your answers through gradescope by 11:59pm on Sunday November 10th. 
+
+Some symbols that might be useful for answering the questions are $H_0$, $H_A$, $\pi$, $\hat{p}$, $\bar{x}$, $\mu$, and $\alpha$. Also, be sure to knit the code often to catch any mistake as soon as you make them!
+
+If you need help with any of the homework assignments, please attend the TA office hours which are listed on Canvas and/or ask questions on [Piazza](https://piazza.com/class/k2cifwdm13c1kv). Also, if you have completed the homework, please help others out by answering questions on Piazza.
+
+
+
+
+
+
+
+<!-- The R chunk below sets some parameters that will be used in the rest of the document. Please ignore it and do not modify it. -->
+```{r message=FALSE, warning=FALSE, tidy=TRUE, echo = FALSE}
+
+library(knitr)
+#library(latex2exp)
+
+options(scipen=999)
+
+opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+set.seed(123)  # set the random number generator to always give the same random numbers
+    
+```
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Part 1: Practice with the basics of R
+
+
+Let's start by reviewing some of the basics of R that we discussed in class. Make sure you understand all the code you create in part 1 since you will use similar code to solve the problems in the rest of the homework.  
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 1.1 (3 points):** As we discussed in class, we can use R as a calculator. Use R to calculate the square root of 21.32, and then divide this number by 2.71 . 
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+
+
+
+# delete the below lines and replace with the correct math
+# (2 + 3)^2
+    
+
+
+
+
+    
+```
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.2 (3 points):** Create a vector with the numbers 7, 15, 18, 3, 5, 12, and 20 in it and assign this vector to an object called `my_vec`. Multiply this vector by 2 and assign it to the object `my_vec2`. Finally, use the sum() function to sum all the values in the vector `my_vec2`. 
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+
+
+
+
+    
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.3 (3 points):** Let's now count how many elements in `my_vec2` are greater than 15. To do use the `my_vec2` object to create an object called `my_bools` that contains the value TRUE for all elements in `my_vec2` that are greater than 15 and FALSE for all elements that are not greater than 15. Then use the sum() function to count how many elements in my_bools are greater than 15. 
+
+
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+
+
+
+     
+
+```
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+
+
+**Part 1.4 (6 points):** As discussed in class, we can use the rbinom() function to generate random data from a binomial distribution. The arguments for this function are:
+
+rbinom(num_sims, size, prob) 
+
+ * num_sims: the number of simulations
+ * size:  the number of "coin flips" in each simulation (i.e., the parameter *n* in the equation for a binomial distribution)
+ * prob:  the probability of getting heads on each coin flip (i.e., the parameter *p* or $\pi$ in the equation for a binomial distribution).
+
+
+
+Use the rbinom() function to run 10,000 simulations, where in each simulation you flip 7 coins, and the probability of heads on each flip is 0.45. Save the these results in an object called `simulated_num_heads`. Then report the following in the answer space below: 
+
+a) The number of times you got exactly 7 heads
+b) The number of times did you got more than 5 heads? 
+c) The proportion of times you got exactly 7 heads out of the 10,000 simulations.
+d) The proportion of times you got more than 5 heads out of the 10,000 simulations.
+
+
+
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+    
+
+
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+**Answer:** 
+
+a) 
+b)
+c) 
+d) 
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 1.5 (5 points):** The rbinom() function returns the number of heads randomly generated on each simulation. We can convert this to the proportion of flips that were heads by dividing the number of heads we got on each simulation, by the times we flipped the coin on each simulation. Create a object called `simulated_prop_heads` that has the proportion of heads genereated on each simulation based on the data you already genereated in the `simulated_num_heads`. Then report the number and the proportion of your simulations that returned more than 30% heads. 
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+
+
+
+
+
+
+
+
+```
+
+
+
+
+
+$\\$
+
+
+
+
+**Answer:** 
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.6 (5 points):** Using the `simulated_num_heads` count how many times you got each value using the table() function and save these counts to an object called `counts_num_heads`. Then use the barplot() function to create a bar plot of the number of heads you got. 
+
+
+
+
+
+```{r}
+
+
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+
+
+
+
+## Problem 2: Hypothesis tests for a single proportion 
+
+
+Paul the Octopus was an octopus who became famous for predicting winners of soccer matches during the 2010 World Cup. To examine Paul's psychic abilities, two containers of food (mussels) were lowered into the Paul's tank prior to each soccer game. The containers were identical, except for country flags of the opposing teams, one on each container. Whichever container Paul opened first was deemed his predicted winner. 
+
+Paul (in a German aquarium) became famous for correctly predicting 11 out of 13 soccer games during the 2010 World Cup. Let's use hypothesis testing to examine whether Paul is actually psychic or if he was merely guessing.   
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 2.1 (5 points)**:  Step 1 of hypothesis testing: state the null and alternative hypothesis. Start by stating the null and alternative hypotheses to test whether Paul is psychic using both words, and using symbols based on the symbols we have discussed in class. Also state significance level $\alpha$ using a commonly used value and describe how to interpret what the significance level means. 
+
+
+**Answers**: 
+
+
+**The null hypothesis in words:** 
+
+
+
+
+**The null hypothesis using symbols**
+
+
+
+
+**The signifiance level**
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 2.2 (3 points) **: Step 2 of hypothesis testing: calculate the statistic of interest. Now compute the observed statistic of interest.  Save this statistic in an object `paul_stat`. Do you think it is likely you would get a statistic this extreme if Paul was guessing? 
+
+```{r problem_2_2, message=FALSE, warning=FALSE, tidy=TRUE}
+  
+  # calculate the observed statistic
+ 
+  
+    
+```
+
+
+**Answer**: 
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 2.3 (5 points) **: Step 3 of hypothesis testing: create the null distribution. Now use the rbinom() function to generate a null distribution that would occur if Paul was guessing, and save the results in an object called `null_distribution` (looking at the code you created in question 1.4 could be helpful). 
+
+Also create a table showing the number of "heads" each simulation produced, and plot this null distribution table as a bar plot. 
+
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+    
+   
+
+        
+```
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 2.4 (10 points)**: Step 4 of hypothesis testing: calculate the p-value. Now use the variables `null_distribution` and `paul_stat` to calculate the number of simulations that had as many or more "heads" than as Paul's correct soccer predictions. To do this do the following steps:
+
+a) Convert the null distribution created in part 2.3 from a null distribution of integers into a distribution of proportionsby dividing the the "size"" (i.e., number of coin flips) similar to what you did in part 1.5 above.  
+
+b) Calculate the number of simulations that are greater than the `paul_stat` in the null distribution (again similar to what you did in part 1.5 above) and save this in an object called `num_points_in_null_dist_greater_than_paul_guesses`.
+
+c) Convert value in `num_points_in_null_dist_greater_than_paul_guesses` into a p-value by dividing by the total number of simulations that were run. Report what this p-value is.
+
+d) Report what the p-value is below.
+
+```{r problem_2_4, message=FALSE, warning=FALSE, tidy=TRUE}
+    
+ 
+
+
+
+
+    
+```
+
+**Answer**: 
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 2.5 (5 points)** Step 5 of hypothesis testing: make a judgment. Make a judgement call as to whether a) the p-value suggests that Paul is psychic and b) whether you really believe Paul is psychic. Make sure to justify your answer to explain Paul's prediction abilities.  
+
+
+
+
+**Answer**: 
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+## Part 3: Do more than 25% of American's believe in ghosts? 
+
+
+In class on Halloween we discussed the problem of assessing whether more than 25% of Americans believe in ghosts. Let's now run a hypothesis test to examine this question. 
+
+The statement of the problem is: A telephone survey of 1000 randomly selected US adults found that 31% of them say they believe in ghosts. Does this provided evidence that more than 1 in 4 US adults believe in ghosts?  
+
+
+
+$\\$
+
+
+
+**Part 3.1 (5 points)** Step 1 of hypothesis testing: state the null and alternative hypotheses. Start by stating the null and alternative hypotheses in symbols and words, and also state the significance level using a common value.
+
+
+
+
+**Answers**
+
+
+
+**The null hypothesis in words:** 
+
+
+
+
+**The null hypothesis using symbols**
+
+
+
+
+**The signifiance level**
+
+
+
+
+
+$\\$
+
+
+
+
+**Part 3.2 (3 points)** Step 2 of hypothesis testing: calculate the observed statistic. Save the observed statistic in an object called `obs_stat`. 
+
+```{r ghost_obs_stat}
+
+
+
+```
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 3.3 (7 points)**. Step 3 of hypothesis testing: create the null distribution. Create the null distribution using the rbinom() function. Use 10,000 simulations and convert the null distribution from a distribution of "number of heads" into a distribution of "proportion of heads". Also plot the null distribution as a bar plot by first using the table() function and then the barplot() function. 
+
+
+
+```{r null_dist_ghost}
+
+
+
+
+
+```
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 3.4 (5 points):** Step 4 of hypothesis testing: calculate the p-value. Calculate the p-value and report what it is.
+
+
+```{r p_value_ghost}
+
+
+
+
+```
+
+
+**Answer:** 
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 3.5 (5 points):** Step 5 of hypothesis testing: make a decision. Describe whether you would reject or fail to reject the null hypothesis based on the p-value you created in part 3.4. 
+
+
+
+**Answer**. 
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+## Reflection (3 points)
+
+
+Please reflect on how the homework went by going to Canvas, going to the Quizzes link, and clicking on [Reflection on homework 1](https://yale.instructure.com/courses/51294/quizzes/20101)
+
+
+
+
+
