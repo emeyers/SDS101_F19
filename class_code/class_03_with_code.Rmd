@@ -1,0 +1,411 @@
+---
+title: "Class 3 notes and code"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+
+
+$\\$
+
+
+
+
+
+```{r setup, include=FALSE}
+
+# install.packages("latex2exp")
+
+library(latex2exp)
+
+
+#options(scipen=999)
+
+
+knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(123)
+
+```
+
+
+
+$\\$
+
+
+
+
+## Overview
+
+ * Learning about R Markdown
+ * Back to the basics of R
+ * Generated random numbers from a binomial distribution
+ 
+
+
+
+
+$\\$
+
+
+
+
+
+#### Part 0: R Markdown
+
+
+R Markdown allows you to combine a written report along with code. All homework assignments will be in R Markdown. 
+
+
+You can also embed links to websites and special $LaTeX$ characters like $\pi$ and $\bar{x}$ and you can put works in **bold** and *italics*
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+#### Part 1.1 Assigning values to objects
+
+
+As we saw last class, we can assign numbers to objects
+
+
+
+```{r}
+
+a <- 7
+b <- 52
+z  <- a * b
+z
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+#### Part 2.1: Numeric, string and boolean data types
+
+We can also assign strings and booleans to objects. We can get the "type" of an object using the class() function. 
+
+
+
+```{r}
+
+a <- 7			
+s <- "s is a terrible name for an object"
+b <- TRUE
+
+class(a)
+class(s)
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+#### Part 3.1: Functions
+
+We can use function to do computations and return results
+
+
+
+```{r}
+
+
+sqrt(49)			
+tolower("DATA is AWESOME!")
+
+
+```
+
+
+
+$\\$
+
+
+
+
+#### Part 3.2: Getting help
+
+To get help information about a function or data set use ?  
+
+
+How else can you get help on how to use R?
+
+[Help desk cat](https://tr4.cbsistatic.com/hub/i/2017/06/12/bd6094f4-c445-4619-a2a4-376b3a8c2065/google-business-cat.jpg)
+
+[Another way to get help](https://piazza.com/class/k2cifwdm13c1kv)
+
+
+
+
+```{r}
+
+? sqrt
+
+
+```
+
+
+
+$\\$
+
+
+
+
+#### Part 4.1: One can add comments to your code to describe what you are doing
+
+```{r}
+
+sqrt(49)    # this takes the square root of 49
+
+
+```
+
+
+
+$\\$
+
+
+
+
+#### Part 5.1: Vectors are ordered sequences of numbers or letters
+
+
+The c() function is used to create vectors
+
+
+```{r}
+
+
+v  <-  c(5, 232, 5, 543)	
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+#### Part 5.2: One can access elements of a vector using square brackets []
+
+
+```{r}
+
+v[4]         # what will the answer be?    
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+#### Part 5.3: We can get multiple elements from a vector too
+
+```{r}
+
+v[c(1, 2)]
+
+
+```
+
+
+
+$\\$
+
+
+
+
+#### Part 5.4: One can assign a sequence of numbers to a vector
+
+
+```{r}
+
+z <- 2:10
+z[3]	
+
+
+```
+
+
+
+$\\$
+
+
+
+
+#### Part 5.5: One can test which elements are greater than a value
+
+```{r}
+
+z > 3
+sum(z > 3)
+
+
+```
+
+
+
+$\\$
+
+
+
+
+#### Part 5.6: One can also apply functions to vectors
+
+```{r}
+
+z <- 2:10
+sqrt(z)
+mean(z)
+
+```
+
+
+
+
+$\\$
+
+
+
+
+
+#### Part 5.7: We can create a vector of booleans for elements are greater than a value
+
+```{r}
+
+the_trues <- z > 3
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+#### Part 5.8: TRUEs are treated as 1’s and FALSEs are treated as 0
+
+
+```{r}
+
+sum(the_trues)     # count how many elements are TRUE
+
+
+```
+
+
+
+$\\$
+
+
+
+
+#### Part 5.9: We can use rbinom() to generate random numbers from a binomial distribution
+
+The rbinom() function has the following arguments
+
+rbinom(num_sims, size, prob)
+
+ * num_sims: the number of simulations (random numbers) we want to generate
+ * size:  the number of coin flips on each simulation  (i.e., n)
+ * prob: the probability of a “head” on each coin flip (i.e., p or $\pi$)
+
+
+Let's 100 random numbers k, from $P(k; n = 20, \pi = .75)$
+
+```{r}
+
+flip_simulations <- rbinom(100, 20, .75)
+
+
+```
+
+
+
+$\\$
+
+
+
+
+#### Part 5.10: We can count how many times we got k heads using:
+
+```{r}
+
+count_num_heads <- table(flip_simulations)
+
+
+```
+
+
+
+$\\$
+
+
+
+
+#### Part 5.11: We can plot this as a barplot using
+
+
+```{r}
+
+barplot(count_num_heads, 
+        xlab = "Number of heads", 
+        ylab = "Count")
+
+
+```
+
+
+
+$\\$
+
+
+
+You are a [rockstar](https://images2.minutemediacdn.com/image/upload/c_fill,g_auto,h_1248,w_2220/f_auto,q_auto,w_1100/v1555319921/shape/mentalfloss/matrix_header.jpg)
+
+
+
+
+
+
+
+
+
+
