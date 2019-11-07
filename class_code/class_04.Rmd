@@ -1,0 +1,165 @@
+---
+title: "Class 4 notes and code"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+
+
+$\\$
+
+
+
+
+
+```{r setup, include=FALSE}
+
+# install.packages("latex2exp")
+
+#library(latex2exp)
+
+
+#options(scipen=999)
+
+
+knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(123)
+
+```
+
+
+
+$\\$
+
+
+
+
+## Overview
+
+ * Run a hypothesis test (randomization test) for a single proportion in R
+ 
+
+
+
+
+
+## Part 1: Hypothesis tests for a single proportion 
+
+
+Let us use R to test whether there is evidence that Doris and Buzz can communicate.
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.1 (5 points)**:  Step 1 of hypothesis testing: state the null and alternative hypothesis. Also state significance level $\alpha$ level.
+
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.2 (3 points) **: Step 2 of hypothesis testing: calculate the statistic of interest. 
+
+
+
+
+```{r problem_1_2, message=FALSE, warning=FALSE, tidy=TRUE}
+
+
+  
+  # calculate the observed statistic
+
+  
+    
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.3 (5 points) **: Step 3 of hypothesis testing: create the null distribution. 
+
+
+
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+    
+
+
+
+        
+```
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 1.4 (10 points)**: Step 4 of hypothesis testing: calculate the p-value. 
+
+
+
+
+```{r problem_1_4, message=FALSE, warning=FALSE, tidy=TRUE}
+    
+
+
+
+
+
+
+    
+```
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 1.5 (5 points)** Step 5 of hypothesis testing: make a judgment. 
+
+
+
+
+
+
+
