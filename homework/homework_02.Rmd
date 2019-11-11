@@ -1,0 +1,504 @@
+---
+title: "Homework 2"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+
+
+
+$\\$
+
+
+
+
+
+The purpose of this homework is to reinforce concepts of hypothesis testing and to learn more methods for doing hypothesis testing in R. Please fill in the appropriate code and write answers to all questions in the answer sections, then submit a compiled pdf with your answers through gradescope by 11:59pm on Sunday November 17th. 
+
+If you need help with any of the homework assignments, please attend the TA office hours which are listed on Canvas and/or ask questions on [Piazza](https://piazza.com/class/k2cifwdm13c1kv). Also, if you have completed the homework, please help others out by answering questions on Piazza.
+
+
+
+
+
+
+<!-- 
+
+If you are using R Studio that is installed on your own computer, run the code in the 
+R chunk below once. This will install some packages and download data needed for these 
+exercises. Note that you should also use a recent version of R since the homework might not run on older versions. 
+
+If you are using the R Studio cloud workpace for the homework, then the packages
+and data should already be available to you so you do not need to run the code below. 
+
+-->
+
+
+```{r message=FALSE, warning = FALSE, echo = FALSE, eval = FALSE}
+
+# If you are running the homework on your personal computer, please uncomment the line below to and run it once to install the package latex2exp
+#install.packages("latex2exp")
+
+```
+
+
+
+<!-- The R chunk below sets some parameters that will be used in the rest of the document. Please ignore it and do not modify it. -->
+```{r message=FALSE, warning=FALSE, tidy=TRUE, echo = FALSE}
+
+library(knitr)
+library(latex2exp)
+
+options(scipen=999)
+
+opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+set.seed(123)  # set the random number generator to always give the same random numbers
+    
+```
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Problem 1: Hypothesis tests for a single proportion using the binomial distribution and normal distributions
+
+
+On problem 3 of the last homework, you ran a hypothesis test to examine whether more than 25% of Americans believe in ghosts. To do this hypothesis test you went through the 5 steps of hypothesis testing which are: 
+
+1) State the null and alternative hypothesis
+2) Calculate the statistic of interest
+3) Create the null distribution
+4) Calculate the p-value
+5) Make a judgment
+
+
+For step 3 above, you created the null distribution by randomly generating data points from a binomial distribution. As you learned in the first half of the class, you can also create a null distribution by:
+
+1) Using the density function for the binomial distribution 
+2) Using the density function for a normal distribution
+
+Let us examine both these methods now using R. 
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.1 (2 points)**:  Repeat step 1 of hypothesis testing for the question of whether more than 25% of Americans believe in ghosts by stating the null and alternative hypothesis **in symbols** (you do not need to restate it in words here). 
+
+Recall that 31% of respondents said they did believe in ghosts and that 1,000 people were surveyed. Also, repeat step 2, and save the observed statistic as a proportion to an object called `obs_stat_prop`, and save the observed statistic as a count of the number of people who said they believed in ghosts in an object called `obs_stat_count`. 
+
+ 
+
+
+
+
+```{r}
+
+
+
+
+```
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 1.2 (5 points)**: 
+
+
+Now for part 3 of hypothesis testing, use the binomial cumulative distribution, pbinom(), to calculate the p-value. 
+
+Look back at homework 1 problme 3 - is this p-value similar to what you got on that homework problem? 
+
+
+
+
+```{r}
+
+
+
+```
+
+**Answer:** 
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+
+**Part 1.3 (bonus question, 0 points)**: 
+
+
+As a bonus question (worth no points), see if you can can plot the null distribution by using the binomial density function, dbinom(), and the barplot() function. 
+
+
+```{r}
+
+
+
+
+
+
+
+```
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.4 (5 points)**: 
+
+
+Now let's use the normal cumulative distribution as an approximation for the binomial distribution in order do step 3 of hypothesis testing. When using the normal approximation for the binomial distribution, the mean of the normal distribution $\mu$ is given by parameter value specified by the null hypothesis. In the R chunk below, create an object below called `mu` that contians this value. 
+The standard deviation for the normal distribution $\sigma$ (i.e., the standard error of the sampling distribution) is given by the formula: 
+
+$\sqrt{\frac{\pi_0 (1 - \pi_0)}{n}}$
+
+
+In the R chunk below, calculate this standard error value and save it to an R object called `sigma`. Be sure to print both `mu` and `sigma` in order to "show your work".
+
+
+
+```{r}
+
+
+  
+  
+```
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.5 (5 points)**: 
+
+Now use the normal cumulative distribution function, pnorm(), and the parameter values you created in part 1.4, to calculate the p-value. Is this similar to the p-value you got in part 1.2? 
+
+
+```{r}
+
+
+
+```
+
+
+**Answer:** 
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 1.6 (bonus question, 0 points)**: 
+
+
+As a bonus question (worth no points), see if you can plot this null distribution by using the normal density function, dnorm(), and the plot() function. 
+
+
+```{r}
+
+
+
+
+
+```
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Problem 2: Permutation tests for comparing two means - Sleep or Caffeine for Memory?
+
+
+
+
+The consumption of caffeine to benefit alertness is a common activity practiced by 90% of adults in North America. Often caffeine is used in order to replace the need for sleep. One recent study compared students’ ability to recall memorized information after either the consumption of caffeine or a brief sleep - see [Mednick et al., 2018](https://www.ncbi.nlm.nih.gov/pubmed/18554731)
+
+A random sample of 35 adults (between the ages of 18 and 39) were randomly divided into three groups and verbally given a list of 24 words to memorize. During a break, one of the groups took a nap for an hour and a half, another group was kept awake and then given a caffeine pill an hour prior to the testing, and a third group was given a placebo. The response variable of interest is the number of words participants are able to recall following the break. 
+
+
+Let's run a hypothesis test to see if there is statistically significant difference in the mean number of words recalled between the group that got *sleep* and the group that got *caffeine* (we will ignore the placebo group since I don't have data from that group). 
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 2.0 (5 points)**  The data for the number of words recalled by members in each of the two groups is below. Start by creating a side by side boxplot comparing the two groups. Describe below whether there appears to be a difference between the groups.
+
+
+```{r sleep_caffeine_data}
+
+sleep_condition <- c(14, 18, 11, 13, 18, 17, 21, 9, 16, 17, 14, 15)
+caffeine_condition <- c(12, 12, 14, 13, 6, 18, 14, 16, 10, 7, 15, 10)
+
+# create a boxplot to compare these groups
+
+
+
+```
+
+
+**Answer**:  
+
+
+
+
+
+$\\$
+
+
+
+
+
+In parts 2.1 to 2.5 you will now do the 5 steps to run a hypothesis test...
+
+
+
+$\\$
+
+
+
+
+**Part 2.1 (5 points)** State the null and alternative hypotheses using words and symbols. Also, give the significance level, describe what it means, and denote it with the appropriate symbol. 
+
+
+
+
+**Answer**:  
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 2.2 (5 points)**  Calculate the value of that statistic for the observed sample, and use the appropriate symbol notation along with its value below. 
+
+
+```{r observed_statistic}
+
+ 
+
+
+```
+
+
+
+**Answer**:  
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 2.3 (10 points)** Create a null distribution using a permutation test (i.e., combine data from both groups, randomly assign them to a fake "caffeine" and "sleep group", calculate a null statistic, and repeat 100,000 times to get a null distribution). 
+
+
+Bonus: Plot a histogram of the null distribution using the hist() function and add a red vertical line to the plot at the value of the observed statistic using the abline() function.  
+
+
+```{r null_distribution}
+
+
+# combine the groups
+
+
+# use a for loop to compute the full null distribution 
+ 
+
+
+ 
+# plot the null distribution using a histogram
+
+
+
+
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 2.4 (5 points)** Now calculate the p-value in the R chunk below. 
+
+```{r p_value}
+
+
+
+
+
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 2.5 (2.5 points)** Do the results seem statistical significant? What would we conclude if we only rejected the null hypothesis if the p-value is less than the significance level? Do you believe there is a difference between these groups? 
+
+
+
+
+
+**Answers**:  
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 2.6 (5 points)** Parametric hypothesis tests are hypothesis tests where the null distribution is given by a mathematical density function. When comparing two means, a parametric hypothesis test, that you likely learned about in introductory statistics, is the t-test, where the null distribution is a t-distribution. 
+
+R has a built in function called `t.test(sample1, sample2)` that takes two samples of data and runs a t-test on them. Use this function to compare the sleep and caffeine groups and report if there is a statistically significant difference between the groups. Also report the 95% confidence interval that the t.test function returns and describe whether this confidence interval is consistent with it being plausiable that there is no difference between the population means of these two groups. 
+
+
+```{r t_test}
+
+
+
+
+
+
+```
+
+**Answers**: 
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+
+
+## Reflection (3 points)
+
+
+Please reflect on how the homework went by going to Canvas, going to the Quizzes link, and clicking on [Reflection on homework 2](https://yale.instructure.com/courses/51294/quizzes/20263)
+
+
+
+
+
