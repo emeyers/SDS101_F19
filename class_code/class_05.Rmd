@@ -1,0 +1,295 @@
+---
+title: "Class 5 notes and code"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+
+
+$\\$
+
+
+
+
+
+```{r setup, include=FALSE}
+
+# install.packages("latex2exp")
+
+library(latex2exp)
+
+
+#options(scipen=999)
+
+
+knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(123)
+
+```
+
+
+
+$\\$
+
+
+
+
+## Overview
+
+ * Binomial density functions and binomial cumulative distributions functions
+ * Normal density functions and normal cumulative distributions functions
+ * For loops
+ 
+
+
+$\\$
+
+
+
+## Part 1: Hypothesis tests for a single proportion using the binomial distribution
+
+
+Let us use R to test whether there is evidence that Doris and Buzz can communicate. This time we will use a **binomial density function** as the null distribution rather than just generated samples from a binomial distribution. 
+
+
+Recall, for step 1 of hypothesis testing, the null and alternative hypotheses for this problem were: 
+
+
+$H_0: \pi = 0.5$ 
+$H_A: \pi > 0.5$ 
+
+
+
+Also, recall for step 2 of hypothesis testing, the observed statistic was:  $\hat{p} = 15/16$
+
+
+```{r}
+
+
+
+
+
+```
+
+
+
+
+
+$\\$
+
+
+
+**Part 1.1**:  Let's create a binomial null distribution consistent with the null hypothesis (step 3 of hypothesis testing). Here we will plot the full **density function**. 
+
+
+```{r}
+
+# use the dbinom() function to create a probability density for all values from 0 to 16
+
+
+
+# add names to this vector
+
+
+
+# use the barplot to plot the density function 
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+**Part 1.2**:  Let's now calculate a p-value from this null distribution and the observed statistic (step 4 of hypothesis testing). To do this we will use the **cumulative distribution function** to get $Pr(K \ge obsstat; n, \pi)$
+
+
+```{r}
+
+# use the cumulative distribution function pbinom() to get the p-value  Pr(k > 14)
+
+
+# verify that it is the same as adding the tail of the density function 
+
+
+
+```
+
+
+Now based on this p-value, do step 5 of hypothesis testing and make a decision 
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Part 2: Hypothesis tests for a single proportion using the normal distribution
+
+
+We can also use the normal density function as an approximation for the binomial density function when calculating p-values. Again, steps 1 and 2 of hypothesis testing are the same: 
+
+
+Step 1:
+
+$H_0: \pi = 0.5$ 
+$H_A: \pi > 0.5$ 
+
+
+Step 2: 
+
+$\hat{p} = 15/16$
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 2.1**:  Let's create a normal null distribution consistent with the null hypothesis (step 3 of hypothesis testing). Here we will plot the full **density function**. 
+
+
+Recall, when using a normal distribution as an approximation for the binomal distribution we have the follow values for the parameters of the normal distribution 
+
+
+$\mu = \pi_0$
+
+$\sigma = \sqrt{\frac{\pi (1 - \pi)}{n}}$
+
+
+
+```{r}
+
+
+# calculate the values fo mu and sigma
+
+
+
+# for plotting the density function, get a range of x-values
+
+
+
+
+# get the corresponding normal density y-values
+
+
+
+
+
+# plot the density function 
+
+
+
+
+
+```
+
+
+
+
+$\\$
+
+
+
+**Part 2.2**:  Let's now calculate a p-value from this null distribution and the observed statistic (step 4 of hypothesis testing). Do do this we will use the **cumulative distribution function** to get $Pr(K \ge obsstat; n, \pi)$
+
+
+```{r}
+
+# use the pnorm function to get the p-value Pr(X > obs_stat | H0 parameters)
+
+
+
+```
+
+
+Now based on this p-value, do step 5 of hypothesis testing and make a decision
+
+
+
+
+$\\$
+
+
+
+
+
+
+## Part 3: R coding - for loops
+
+For loops are useful when you want to repeat a piece of code many times under similar conditions.
+
+
+
+**Part 3.1**: In every iteration of a for loop, the value of *i* is increated by 1.
+
+
+
+```{r}
+
+
+
+
+```
+
+
+$\\$
+
+
+
+
+**Part 3.2**:  For loops are particular useful in combination with vectors that can store the results
+
+
+```{r}
+
+
+# create an empty vector to store the results
+
+
+# add values to this vector in a for loop
+
+
+
+
+```
+
+
+$\\$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
