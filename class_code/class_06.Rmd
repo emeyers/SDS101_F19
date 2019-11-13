@@ -1,0 +1,409 @@
+---
+title: "Class 6 notes and code"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+
+
+$\\$
+
+
+
+
+
+```{r setup, include=FALSE}
+
+# install.packages("latex2exp")
+
+library(latex2exp)
+
+
+#options(scipen=999)
+
+
+knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(123)
+
+```
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Part 1: R coding - for loops
+
+For loops are useful when you want to repeat a piece of code many times under similar conditions.
+
+
+
+**Part 1.1**: In every iteration of a for loop, the value of *i* is increated by 1.
+
+
+
+```{r}
+
+
+
+
+```
+
+
+$\\$
+
+
+
+
+**Part 1.2**:  For loops are particular useful in combination with vectors that can store the results
+
+
+```{r}
+
+
+
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Part 2: Permutation tests for comparing two sample means in R
+
+
+
+##### Step 0: Plot the data
+
+
+```{r pill_plot}
+
+
+
+treat <- c(7, -4, 18, 17, -3, -5,  1, 10, 11, -2)
+control <- c(-1,  12,  -1,  -3,   3,  -5,   5,   2, -11,  -1,  -3)
+
+
+# alternatively, could do the mice gaining weight example
+# download_class_data('mice.Rda')
+# dark_BM_increase <- c(9.58,  7.69,  9.83,  8.70, 13.29,  7.24,  9.72,  5.58)
+# light_BM_increase <- c(11.98,  9.97,  9.79, 10.24, 10.28,  7.97, 18.91, 12.14, 15.32)
+
+
+# plot the data using a boxplot
+
+
+
+
+
+```
+
+
+
+
+
+
+
+##### Step 1: State the null and alternative hypotheses 
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+##### Step 2: Calculate the observed statistic
+
+```{r pill_obs_stat}
+
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+##### Step 3: Create the null distribution
+
+
+
+```{r null_dist_pill}
+
+
+# combine the data from the treatment and control groups together
+
+
+
+
+
+# use a for loop to create shuffled treatment and control groups and shuffled statistics 
+
+
+
+
+
+# plot the null distribution as a histogram
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+##### Step 4: Calculate a p-value
+
+
+```{r p_value_pill}
+
+
+# plot the null distribution again with a red line a the value of the observed statistic
+
+
+
+
+
+
+# calculate the p-value
+
+
+
+
+
+
+
+```
+
+
+
+
+$\\$
+
+
+
+##### Step 5: Make a decision
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+[pills](https://raw.githubusercontent.com/emeyers/SDS230_F19/master/class_images/class_09/pills.jpg)
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Part 3: Permutation tests for comparing two sample means in R - mice example
+
+
+
+**Question:** Does eating late at night make you put on more weight compared to whether you ate the same amount of food during the day? 
+
+
+To test this idea researchers, [Fonken et al, 2010](https://www.ncbi.nlm.nih.gov/pubmed/20937863), examined this question in mice. 
+
+Mice were randomly divided into 2 groups:
+
+ * **Dark condition**:  8 mice were given 8 hours of darkness at night when they couldn’t eat
+ * **Light condition**: 9 were constantly exposed to light for 24 hours so they could always eat
+
+
+The data from the mice is below. Let's use a permutation test to see if there is any difference between the amount of weight the mice gained between these two conditions. 
+
+
+
+
+$\\$
+
+
+
+
+##### Step 0: Plot the data
+
+
+```{r mice_plot}
+
+# run this once
+# get the mice data
+# source('class_functions.R')
+# download_class_data("mice.Rda")
+
+# load the data
+load("mice.Rda")
+
+
+
+# plot the data as a boxplot
+
+
+
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+##### Step 1: State the null and alternative hypotheses 
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+##### Step 2: Calculate the observed statistic
+
+```{r mice_obs_stat}
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+##### Step 3: Create the null distribution
+
+
+
+```{r null_dist_mice}
+
+
+# combine the data from the dark and light groups together
+
+
+
+
+# use a for loop to create shuffled dark and light groups and shuffled statistics 
+
+
+
+
+
+
+```
+
+
+
+
+
+$\\$
+
+
+
+
+
+##### Step 4: Calculate a p-value
+
+
+```{r p_value_mice}
+
+
+# plot the null distribution again with a red line a the value of the observed statistic
+
+
+
+# calculate the p-value
+
+
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+
+
+##### Step 5: Make a decision
+
+
+
+
+$\\$
+
+
+
+
+
+[Give a mouse a cookie](https://hamstersworld.weebly.com/uploads/2/0/6/1/2061190/8024088.jpg)
+
+
+[science has gone too far](https://i.imgflip.com/9vr.jpg)
+
+
+
