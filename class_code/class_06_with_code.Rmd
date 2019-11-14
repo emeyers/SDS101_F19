@@ -1,0 +1,488 @@
+---
+title: "Class 6 notes and code"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+
+
+$\\$
+
+
+
+
+
+```{r setup, include=FALSE}
+
+# install.packages("latex2exp")
+
+library(latex2exp)
+
+
+#options(scipen=999)
+
+
+knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(123)
+
+```
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Part 1: R coding - for loops
+
+For loops are useful when you want to repeat a piece of code many times under similar conditions.
+
+
+
+**Part 1.1**: In every iteration of a for loop, the value of *i* is increated by 1.
+
+
+
+```{r}
+
+for (i in 1:20) {
+	print(i)
+}
+
+
+```
+
+
+$\\$
+
+
+
+
+**Part 1.2**:  For loops are particular useful in combination with vectors that can store the results
+
+
+```{r}
+
+
+my_results <- NULL      # create an empty vector to store the results
+for (i in 1:20) {
+	 my_results[i] <- i^2
+}
+
+
+my_results
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Part 2: Permutation tests for comparing two sample means in R
+
+
+
+##### Step 0: Plot the data
+
+
+```{r pill_plot}
+
+
+
+treat <- c(7, -4, 18, 17, -3, -5,  1, 10, 11, -2)
+control <- c(-1,  12,  -1,  -3,   3,  -5,   5,   2, -11,  -1,  -3)
+
+
+
+# plot the data
+boxplot(treat, control, 
+        names = c("Treatment", "Control"),
+        main = "Comparison of decrease in blood pressure",
+        ylab = "Blood pressure decrease")
+
+
+
+# create a stripchart
+data_list <- list(treat, control) 
+  
+stripchart(data_list, 
+           group.names = c("treatment", "control"), 
+           main = "Comparison of decrease in blood pressure",
+           xlab = "Blood pressure decrease", 
+           col = c("red", "blue"))
+
+
+```
+
+
+
+
+
+
+
+##### Step 1: State the null and alternative hypotheses 
+
+
+$H_0: \mu_{treat} - \mu_{control} = 0$
+$H_A: \mu_{treat} - \mu_{control} > 0$
+
+
+$\alpha = 0.05$
+
+
+
+
+$\\$
+
+
+
+
+##### Step 2: Calculate the observed statistic
+
+```{r pill_obs_stat}
+
+
+obs_stat <- mean(treat) - mean(control)
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+##### Step 3: Create the null distribution
+
+
+
+```{r null_dist_pill}
+
+
+# combine the data from the treatment and control groups together
+combined_data <- c(treat, control)
+
+
+# use a for loop to create shuffled treatment and control groups and shuffled statistics 
+null_distribution <-  NULL
+for (i in 1:10000) {
+
+       # shuffle data
+        shuff_data <- sample(combined_data)
+
+        # create fake treatment and control groups
+        shuff_treat   <-  shuff_data[1:10]
+        shuff_control  <-  shuff_data[11:21]
+
+        # save the statistic of interest
+        null_distribution[i] <- mean(shuff_treat) - mean(shuff_control)
+
+        
+}
+
+
+# plot the null distribution as a histogram
+hist(null_distribution, 
+     nclass = 200,
+     main = "Null distribution", 
+     xlab = TeX("$\\bar{x}_{shuff-treat} - \\bar{x}_{shuff-control}$"))
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+##### Step 4: Calculate a p-value
+
+
+```{r p_value_pill}
+
+
+# plot the null distribution again with a red line a the value of the observed statistic
+hist(null_distribution, 
+     nclass = 200,
+     main = "Null distribution", 
+     xlab = TeX("$\\bar{x}_{shuff-treat} - \\bar{x}_{shuff-control}$"))
+
+
+abline(v = obs_stat, col = "red")
+
+
+
+# calculate the p-value
+(p_value <- sum(null_distribution >= obs_stat)/10000)
+
+
+
+
+```
+
+
+
+
+$\\$
+
+
+
+##### Step 5: Make a decision
+
+Since `r p_value` is greater than $\alpha = 0.05$ we can not reject the null hypothesis. Thus if we are using the Neyman-Pearson paradigm, we do not have sufficient evidence to say that the pill is effective. 
+
+
+
+$\\$
+
+
+
+
+
+[pills](https://raw.githubusercontent.com/emeyers/SDS230_F19/master/class_images/class_09/pills.jpg)
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Part 3: Permutation tests for comparing two sample means in R - mice example
+
+
+
+**Question:** Does eating late at night make you put on more weight compared to whether you ate the same amount of food during the day? 
+
+
+To test this idea researchers, [Fonken et al, 2010](https://www.ncbi.nlm.nih.gov/pubmed/20937863), examined this question in mice. 
+
+Mice were randomly divided into 2 groups:
+
+ * **Dark condition**:  8 mice were given 8 hours of darkness at night when they couldn’t eat
+ * **Light condition**: 9 were constantly exposed to light for 24 hours so they could always eat
+
+
+The data from the mice is below. Let's use a permutation test to see if there is any difference between the amount of weight the mice gained between these two conditions. 
+
+
+
+
+$\\$
+
+
+
+
+##### Step 0: Plot the data
+
+
+```{r mice_plot}
+
+# run this once
+# get the mice data
+# source('class_functions.R')
+# download_class_data("mice.Rda")
+
+# load the data
+load("mice.Rda")
+
+
+
+# plot the data as a boxplot
+boxplot(dark_BM_increase, light_BM_increase, 
+        names = c("Restricted eating times", "Unrestricted eating times"),
+        main = "Comparison of weight gain in mice",
+        ylab = "Weight increase (grams")
+
+
+
+# plot the data as a strip chart by
+
+
+# a) creating a list of the data 
+data_list <- list(dark_BM_increase, light_BM_increase) 
+
+# b) creating a stripchart   
+stripchart(data_list, 
+           group.names = c("Dark (restricted)", "Light (unrestricted)"), 
+           main = "Comparison of weight gain in mice",
+           xlab = "Weight increase (grams)", 
+           col = c("red", "blue"))
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+##### Step 1: State the null and alternative hypotheses 
+
+
+$H_0: \mu_{light} - \mu_{dark} = 0$
+$H_A: \mu_{light} - \mu_{dark} > 0$
+
+
+$\alpha = 0.05$
+
+
+
+
+
+$\\$
+
+
+
+
+
+##### Step 2: Calculate the observed statistic
+
+```{r mice_obs_stat}
+
+
+(obs_stat <- mean(light_BM_increase) - mean(dark_BM_increase))
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+##### Step 3: Create the null distribution
+
+
+
+```{r null_dist_mice}
+
+
+# combine the data from the dark and light groups together
+combined_data <- c(dark_BM_increase, light_BM_increase)
+
+
+# use a for loop to create shuffled dark and light groups and shuffled statistics 
+null_distribution <-  NULL
+for (i in 1:10000) {
+
+       # shuffle data
+        shuff_data <- sample(combined_data)
+
+        # create fake dark and light groups
+        shuff_light   <-  shuff_data[1:9]
+        shuff_dark  <-  shuff_data[10:17]
+
+        # save the statistic of interest
+        null_distribution[i] <- mean(shuff_light) - mean(shuff_dark)
+
+        
+}
+
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+##### Step 4: Calculate a p-value
+
+
+```{r p_value_mice}
+
+
+# plot the null distribution again with a red line a the value of the observed statistic
+hist(null_distribution, 
+     nclass = 200,
+     main = "Null distribution", 
+     xlab = TeX("$\\bar{x}_{shuff-treat} - \\bar{x}_{shuff-control}$"))
+
+
+abline(v = obs_stat, col = "red")
+
+
+
+# calculate the p-value
+(p_value <- sum(null_distribution >= obs_stat)/10000)
+
+
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+
+
+##### Step 5: Make a decision
+
+Since `r p_value` is less than $\alpha = 0.05$ we can reject the null hypothesis and accept the alternative hypothesis. Thus, if we are using the Neyman-Pearson paradigm, we have sufficient evidence to say that eating at night appears to cause weight gain in mice.
+
+
+
+
+
+$\\$
+
+
+
+
+
+[Give a mouse a cookie](https://hamstersworld.weebly.com/uploads/2/0/6/1/2061190/8024088.jpg)
+
+
+[science has gone too far](https://i.imgflip.com/9vr.jpg)
+
+
+
