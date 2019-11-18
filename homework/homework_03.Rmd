@@ -1,0 +1,515 @@
+---
+title: "Homework 3"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+
+
+
+$\\$
+
+
+
+
+
+The purpose of this homework is to practice doing parametric hypothesis tests for two means in R and to learn how to use the bootstrap to create confidence intervals. Please fill in the appropriate code and write answers to all questions in the answer sections, then submit a compiled pdf with your answers through gradescope by 11:59pm on Sunday November 24th. 
+
+If you need help with any of the homework assignments, please attend the TA office hours which are listed on Canvas and/or ask questions on [Piazza](https://piazza.com/class/k2cifwdm13c1kv). Also, if you have completed the homework, please help others out by answering questions on Piazza.
+
+
+
+
+
+
+<!-- 
+
+If you are using R Studio that is installed on your own computer, run the code in the 
+R chunk below once. This will install some packages and download data needed for these 
+exercises. Note that you should also use a recent version of R since the homework might not run on older versions. 
+
+If you are using the R Studio cloud workpace for the homework, then the packages
+and data should already be available to you so you do not need to run the code below. 
+
+-->
+
+
+```{r message=FALSE, warning = FALSE, echo = FALSE, eval = FALSE}
+
+# If you are running the homework on your personal computer, please uncomment the line below to and run it once to install the package latex2exp
+#install.packages("latex2exp")
+
+# install.packages("Stat2Data")
+
+```
+
+
+
+<!-- The R chunk below sets some parameters that will be used in the rest of the document. Please ignore it and do not modify it. -->
+```{r message=FALSE, warning=FALSE, tidy=TRUE, echo = FALSE}
+
+library(knitr)
+library(latex2exp)
+
+options(scipen=999)
+
+opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+set.seed(123)  # set the random number generator to always give the same random numbers
+    
+```
+
+
+
+
+
+$\\$
+
+
+
+## Problem 1: Parametric tests for comparing two means - Sleep or Caffeine for Memory revisited?
+
+
+At the end of the previous homework (homework problem 2.6) you used R's built in t.test() function to compare two means using a parametric distribution as the null distribution. While using R's built in t.test() function is how you will likely run t-tests in practice since it is easy to use, in order to gain a better understanding how the t-test works, let's breakdown the individual steps that underlie the t.test() function using our 5 step procedure for hypothesis testing. 
+
+
+To examine this question let's revist the study we analyzed in problem 2 of homework 2. Recall the statement of the problem was: 
+
+
+The consumption of caffeine to benefit alertness is a common activity practiced by 90% of adults in North America. Often caffeine is used in order to replace the need for sleep. One recent study compared students’ ability to recall memorized information after either the consumption of caffeine or a brief sleep - see [Mednick et al., 2018](https://www.ncbi.nlm.nih.gov/pubmed/18554731)
+
+A random sample of 35 adults (between the ages of 18 and 39) were randomly divided into three groups and verbally given a list of 24 words to memorize. During a break, one of the groups took a nap for an hour and a half, another group was kept awake and then given a caffeine pill an hour prior to the testing, and a third group was given a placebo. The response variable of interest is the number of words participants are able to recall following the break. 
+
+
+
+
+Let's now run a hypothesis test to see if there is a statistically significant difference in the mean number of words recalled between the group that got *sleep* and the group that got *caffeine* using a **parametric hypothesis tests** based on the t-distribution. 
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 1.0 (5 points)**  The data for the number of words recalled by members in each of the two groups is below (same data as in problem 2.0 on homework 2). Start by creating a strip chart comparing the two groups. Describe below whether there appears to be a difference between the groups based on this plot.
+
+
+```{r sleep_caffeine_data}
+
+sleep_condition <- c(14, 18, 11, 13, 18, 17, 21, 9, 16, 17, 14, 15)
+caffeine_condition <- c(12, 12, 14, 13, 6, 18, 14, 16, 10, 7, 15, 10)
+
+
+
+
+
+```
+
+
+**Answer**:  
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+In parts 1.1 to 1.5 you will now do the 5 steps to run a hypothesis test...
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 1.1 (2 points)** State the null and alternative hypotheses using words and symbols (again). Also, give the significance level and denote it with the appropriate symbol. 
+
+
+
+
+**Answer**:  
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 1.2 (5 points)**  Now calculate a t-statistic for comparing the group means. Report what the value of this statistic is below. 
+ 
+
+
+```{r observed_statistic}
+
+
+
+```
+
+
+
+**Answer**:  
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 1.3 (10 points)** Let's now identify the null distribution that our t-distribution would come from by calculating the appropriate degrees of freedom as storing this value in an object called `deg_free`. Then plot this density function using the dt() function and add a red vertical line at the value of observed t-statistic.
+
+
+
+```{r null_distribution}
+
+
+
+# calculate the degrees of freedom
+
+
+
+# plot the null t-distribution
+
+
+
+
+# add a red vertical line for the observed statistic
+
+
+
+
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 1.4 (5 points)** Now calculate the p-value in the R chunk below using the pt() function. 
+
+```{r p_value}
+
+
+
+
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 1.5 (2 points)** Do the results seem statistically significant? What would we conclude if we only rejected the null hypothesis if the p-value is less than the significance level? Do the results differ from the results you obtained on homework 2? 
+
+
+
+**Answers**:  
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+**Part 1.6 (3 points)** Repeat part 2.6 from homework 2 here by using the t.test() function to run the same t-test that you ran above. You should notice that the p-value is slighly different from what you found in part 1.4. Describe what a possible reason is for this difference by looking carefully at the output of the t.test() function. 
+
+Also, are the results statistical statistically when you use R's built in t.test() function and do you come to the same conclusions as you did in part 1.5 above?  
+
+```{r t_test}
+
+
+
+
+
+```
+
+**Answers**: 
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 1.7 (3 points)** Repeat part 1.4 from this homework (i.e., use the pt() function with the t-statistic you calculated), but this time **use the degrees of freedom that R's t.test() function uses** (from part 1.6 above). Do you now get the same p-value as R's t.test() function?
+
+
+```{r}
+
+
+
+
+```
+
+
+**Answer** 
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+## Problem 2: Creating confidence intervals with the bootstrap and formulas
+
+
+As discussed in class, we can use the bootstrap to create confidence intervals. This can be done by either: 
+
+1) Using the bootstrap distribution to estimate the standard error ($\hat{SE}$) of a sampling distribution, and then computing a confidence interval using the formula $CI = stat ~ \pm ~ t^* \cdot \hat{SE}$
+
+2) Taking quantile values from the bootstrap distribution as an estimate of the confidence interval
+
+
+In the problem below you will use the bootstrap to create a confidence interval for the mean height of adult male African elephants. Heights is measured from the ground to the top of the elephant's shoulder in cm, and the code below creates the data needed for this analysis which is stored in a vector object called `elephant_heights `. 
+
+
+```{r}
+
+
+library(Stat2Data)
+
+data(ElephantsFB)
+elephant_heights <- subset(ElephantsFB, ElephantsFB$Age > 17)$Height
+
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+**Part 2.1 (5 points)**  Let's start by calculating the number of elephants in our sample using the length() function and store the answer in an object called n_sample_size. Also calculate the mean height of the elephants and store the result in an object called the_stat. Report the value for the sample size and the mean elephant height and use the appropriate symbol for the mean elephant height. Finally, a boxplot of the elephant heights (and don't forget to label your axes). 
+
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+
+
+# get the samples size and store it in an object called n_sample_size
+
+
+
+# get the mean price and store it in an object called the_stat 
+
+
+# plot a boxplot of the elephant heights
+
+
+
+
+```
+
+
+
+**Answer**: 
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+    
+**Part 2.2 (7 points)**  Now use a for loop to create a bootstrap distribution by: 
+
+1) sampling with replacement *n_sample_size* values from elephant_heights
+2) calculating the mean of the bootstrap sample and storing it in a vector named `bootstrap_dist`
+3) repeating this process 10,000 times. 
+
+Then plot a histogram of the bootstrap distribution. Also, calculate the bootstrap standard error $SE*$ and store it in an object called `SE_boot`
+
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+
+
+
+
+
+```
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+ 
+**Part 2.3 (5 points)** Now using the bootstrap standard error you calculated above, calculate a 95% confidence interval using the formula:  $CI_b = \bar{x} \pm  2 \cdot SE*$. Report what the interval is below and what this confidence interval means in terms of the larger population (or elephant generation process). Also, use the quantile() function to get a 95% confidence interval. Do these two methods yield similar confidence intervals? 
+
+
+
+
+```{r}
+
+
+
+```
+
+
+**Answer** 
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 2.4 (5 points)**  We can also calculate confidence intervals for the mean $\bar{x}$ using mathematical formulas. In particular we can use the formula: $CI = \bar{x} \pm 2 \cdot SE$, where SE is given by the formula $SE = \frac{s}{\sqrt{n}}$ and where *s* is the standard deviation of the sample and *n* is the sample size. 
+
+Let's use this approach by taking the following steps:
+
+1) Calculate the standard deviation of the sample *s* using the sd() function and save it in an object called `the_sd`. 
+2) Calculate the standard error $SE = \frac{s}{\sqrt{n}}$ and save it in an object called `the_se`
+3) Calculate the confidence interval using the formula $SEM = \bar{x} \pm 2 \cdot SE$
+
+Report what the confidence interval is and if it is similar to what is calculated above using the bootstrap. 
+
+
+```{r}
+
+
+
+
+
+```
+
+**Answer** 
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 2.5 (5 points)** The value of 2 in the equation for the the confidence interval $CI = \bar{x} \pm 2 \cdot SE$ is an approximate value. What we should really be using to be more precise is the quantile value from a t-distribution with n-1 degrees of freedom, i.e. we should use the formula $CI = \bar{x} \pm t^* \cdot SE$. 
+
+We can get such a quantile value $t^*$ from a t-distribution in R using the `qt(p, df)` function, where *p* is the value between 0 and 1 that returns the quantile value $t^*$ such that *p* proportion of the probabilty density of the t-distribution is less than $t^*$  (i.e., `p = Pr(X < t*; df)` ) and *df* is the degrees of freedom parameter which is the size of sample *n* minus 1. 
+
+In the code chunk below, calculate the $t^*$ value for the 95% confidence interval and save it in an object called `t_star`. Note, to do this you will want to use a *p* value such that 2.5% of the t-distribution is in both tails. Then recalculate the 95% confidence interval using this $t^*$ value. Report the interval below and whether it is similar to the ones you obtained above. Also use R's built in t.test() function on the elephant data and look at the confidence interval returned to verify that you have calculated the confidence interval correctly. 
+
+
+
+```{r}
+
+
+
+
+```
+
+
+**Answer** 
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+
+
+
+## Reflection (3 points)
+
+
+Please reflect on how the homework went by going to Canvas, going to the Quizzes link, and clicking on [Reflection on homework 3](https://yale.instructure.com/courses/51294/quizzes/20367)
+
+
+
+
+
