@@ -1,0 +1,371 @@
+---
+title: "Class 7 notes and code"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+
+
+$\\$
+
+
+
+
+
+```{r setup, include=FALSE}
+
+# install.packages("latex2exp")
+
+library(latex2exp)
+
+
+#options(scipen=999)
+
+
+knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(123)
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Part 1: Parametric tests for comparing two means
+
+
+
+**Question:** Does eating late at night make you put on more weight compared to whether you ate the same amount of food during the day? 
+
+
+To test this idea researchers, [Fonken et al, 2010](https://www.ncbi.nlm.nih.gov/pubmed/20937863), examined this question in mice. 
+
+Mice were randomly divided into 2 groups:
+
+ * **Dark condition**:  8 mice were given 8 hours of darkness at night when they couldn’t eat
+ * **Light condition**: 9 were constantly exposed to light for 24 hours so they could always eat
+
+
+The data from the mice is below. Let's use a t-test to see if there is any difference between the amount of weight the mice gained between these two conditions. 
+
+
+Our formula for a t-statistic for comparing two means is:  $t = \frac{\bar{x_{light}} - \bar{x_{dark}}}{SE}$ 
+
+
+Our formula for calculating the standard error is: $SE = \sqrt{\frac{s_1^2}{n_2} + \frac{s_2^2}{n_1}}$
+
+
+This is Welch's t-test, which gives valid results even when there are unequal variances between the two groups. 
+
+
+
+
+
+$\\$
+
+
+
+
+
+##### Step 0: Plot the data
+
+
+```{r mice_plot}
+
+# run this once
+# get the mice data
+# source('class_functions.R')
+# download_class_data("mice.Rda")
+
+# load the data
+load("mice.Rda")
+
+
+
+
+# a) creating a list of the data 
+
+
+
+# b) creating a stripchart   
+
+
+
+```
+
+
+
+
+##### Step 1: State the null and alternative hypotheses 
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+##### Step 2: Calculate the observed statistic
+
+```{r pill_obs_stat}
+
+
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+##### Step 3: Create the null distribution
+
+
+
+```{r null_dist_mice}
+
+
+
+# sample sizes for the two conditions
+
+
+
+# a conservative estimate of the degrees of freedom
+
+
+
+
+# plot the null distribution with the observed statistic on it
+
+
+
+
+
+
+
+
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+##### Step 4: Calculate a p-value
+
+
+```{r p_value_mice}
+
+
+
+
+# calculate the p-value
+
+
+
+
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+
+
+##### Step 5: Make a decision
+
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+
+## Part 2: Using the bootstrap to create confidence intervals
+
+
+Let's create a confidence interval for the mean amount of weight ($\mu_{light}$) that we would expect our mice in the light group to put on using the bootstrap. 
+
+
+
+
+$\\$
+
+
+
+**Part 2.1**  Use a for loop to create a bootstrap distribution by: 
+
+1) sampling with replacement *n* values from light weight gain group
+2) calculating the mean of the bootstrap sample and storing it in a vector named `bootstrap_dist`
+3) repeating this process 10,000 times. 
+
+Then plot a histogram of the bootstrap distribution and calculate the bootstrap standard error $SE*$ and store it in an object called `SE_boot`
+
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+
+
+# get the sample size
+
+
+
+# run a for loop to generate the bootstrap distribution 
+
+
+
+
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 2.2** 
+
+Let's use the bootstrap standard error you to now calculate a 95% confidence interval using the formula:  
+
+$CI_b = \bar{x} \pm  2 \cdot SE*$. 
+
+
+We can also use the quantile() function to get a 95% confidence interval.
+
+
+
+```{r}
+
+
+# get the observed statistic
+
+
+# use the formula to get the bootstrap confidence interval
+
+
+# also get the CIs using quantiles...
+
+
+```
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 2.3**  We can also calculate confidence intervals for the mean $\mu$ using the formula:
+
+$CI = \bar{x} \pm 2 \cdot SE$
+
+where SE is given by the formula $SE = \frac{s}{\sqrt{n}}$ and  *s* is the standard deviation of the sample and *n* is the sample size. 
+
+
+```{r}
+
+# calculate the standard error
+
+
+
+
+# create the confidence interval
+
+
+
+
+```
+
+
+
+
+
+$\\$
+
+
+
+
+**Part 2.4** The value of 2 in the equation for the the confidence interval $CI = \bar{x} \pm 2 \cdot SE$ is an approximate value. We can get a more precise confidence interval if we use the quantile value from a t-distribution with n-1 degrees of freedom, i.e. we should use the formula $CI = \bar{x} \pm t^* \cdot SE$. 
+
+We can get such a quantile value $t^*$ from a t-distribution in R using the `qt(p, df)` function:
+
+
+
+```{r}
+
+
+# get the quantile value from a t-distribution
+
+
+# calculate the CI using this quantile value
+
+
+
+
+```
+
+
+

@@ -434,7 +434,7 @@ $\\$
 
 
 
-**Part 2.4 (5 points)**  We can also calculate confidence intervals for the mean $\bar{x}$ using mathematical formulas. In particular we can use the formula: $CI = \bar{x} \pm 2 \cdot SE$, where SE is given by the formula $SE = \frac{s}{\sqrt{n}}$ and where *s* is the standard deviation of the sample and *n* is the sample size. 
+**Part 2.4 (5 points)**  We can also calculate confidence intervals for the mean $\mu$ using mathematical formulas. In particular we can use the formula: $CI = \bar{x} \pm 2 \cdot SE$, where SE is given by the formula $SE = \frac{s}{\sqrt{n}}$ and where *s* is the standard deviation of the sample and *n* is the sample size. 
 
 Let's use this approach by taking the following steps:
 
