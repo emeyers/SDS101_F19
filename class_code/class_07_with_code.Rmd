@@ -1,0 +1,249 @@
+---
+title: "Class 7 notes and code"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+
+
+$\\$
+
+
+
+
+
+```{r setup, include=FALSE}
+
+# install.packages("latex2exp")
+
+library(latex2exp)
+
+
+#options(scipen=999)
+
+
+knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(123)
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+## Part 1: Parametric tests for comparing two means
+
+
+
+**Question:** Does eating late at night make you put on more weight compared to whether you ate the same amount of food during the day? 
+
+
+To test this idea researchers, [Fonken et al, 2010](https://www.ncbi.nlm.nih.gov/pubmed/20937863), examined this question in mice. 
+
+Mice were randomly divided into 2 groups:
+
+ * **Dark condition**:  8 mice were given 8 hours of darkness at night when they couldn’t eat
+ * **Light condition**: 9 were constantly exposed to light for 24 hours so they could always eat
+
+
+The data from the mice is below. Let's use a t-test to see if there is any difference between the amount of weight the mice gained between these two conditions. 
+
+
+Our formula for a t-statistic for comparing two means is:  $t = \frac{\bar{x_{light}} - \bar{x_{dark}}}{SE}$ 
+
+
+Our formula for calculating the standard error is: $SE = \sqrt{\frac{s_1^2}{n_2} + \frac{s_2^2}{n_1}}$
+
+
+This is Welch's t-test, which gives valid results even when there are unequal variances between the two groups. 
+
+
+
+
+
+$\\$
+
+
+
+
+
+##### Step 0: Plot the data
+
+
+```{r mice_plot}
+
+# run this once
+# get the mice data
+# source('class_functions.R')
+# download_class_data("mice.Rda")
+
+# load the data
+load("mice.Rda")
+
+
+
+# plot the data as a strip chart by
+
+
+# a) creating a list of the data 
+data_list <- list(dark_BM_increase, light_BM_increase) 
+
+# b) creating a stripchart   
+stripchart(data_list, 
+           group.names = c("Dark (restricted)", "Light (unrestricted)"), 
+           main = "Comparison of weight gain in mice",
+           xlab = "Weight increase (grams)", 
+           col = c("red", "blue"))
+
+
+```
+
+
+
+
+##### Step 1: State the null and alternative hypotheses 
+
+
+$H_0: \mu_{light} - \mu_{dark} = 0$
+$H_A: \mu_{light} - \mu_{dark} > 0$
+
+
+$\alpha = 0.05$
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+##### Step 2: Calculate the observed statistic
+
+```{r pill_obs_stat}
+
+
+(SE_pooled <- sqrt(     var(light_BM_increase)/length(light_BM_increase) +  var(dark_BM_increase)/length(dark_BM_increase))  )
+ 
+(obs_stat <- (mean(light_BM_increase) - mean(dark_BM_increase))/SE_pooled)
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+##### Step 3: Create the null distribution
+
+
+
+```{r null_dist_mice}
+
+
+
+# sample sizes for the two conditions
+n_light <- length(light_BM_increase)
+n_dark <- length(dark_BM_increase)
+
+
+# a conservative estimate of the degrees of freedom
+(deg_free <- min(n_light, n_dark) - 1)
+
+
+# plot the null distribution with the observed statistic on it
+x_vals <- seq(-5, 5, length.out = 1000)
+y_vals <- dt(x_vals, deg_free)
+
+
+plot(x_vals, y_vals, type = "l", xlab = "t-statistic values", 
+     ylab = "Relative frequency", 
+     main = "Null distribution")
+points(x_vals, rep(0, length(x_vals)), type = "l")  # add a line at 0
+
+
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+##### Step 4: Calculate a p-value
+
+
+```{r p_value_mice}
+
+
+
+plot(x_vals, y_vals, type = "l", xlab = "t-statistic values", 
+     ylab = "Relative frequency", 
+     main = "Null distribution")
+points(x_vals, rep(0, length(x_vals)), type = "l")  # add a line at 0
+abline(v = obs_stat, col = "red")
+
+
+# calculate the p-value
+(p_value <- pt(obs_stat, df = deg_free, lower.tail = FALSE))
+
+
+
+
+```
+
+
+
+
+$\\$
+
+
+
+
+
+
+##### Step 5: Make a decision
+
+Since `r p_value` is less than $\alpha = 0.05$ we can reject the null hypothesis and accept the alternative hypothesis. Thus, if we are using the Neyman-Pearson paradigm, we have sufficient evidence to say that eating at night appears to cause weight gain in mice.
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
