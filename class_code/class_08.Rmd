@@ -1,0 +1,208 @@
+---
+title: "Class 8 notes and code"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+
+
+$\\$
+
+
+
+
+
+```{r setup, include=FALSE}
+
+# install.packages("latex2exp")
+
+library(latex2exp)
+
+
+#options(scipen=999)
+
+
+knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(123)
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+
+
+
+## Part 1: Using the bootstrap to create confidence intervals
+
+
+Let's create a confidence interval for the mean amount of weight ($\mu_{light}$) that we would expect our mice in the light group to put on using the bootstrap. 
+
+
+
+```{r}
+
+# download_class_data("mice.Rda")
+
+# load the data
+load("mice.Rda")
+
+
+```
+
+
+
+
+$\\$
+
+
+
+**Part 1.1**  Use a for loop to create a bootstrap distribution by: 
+
+1) sampling with replacement *n* values from light weight gain group
+2) calculating the mean of the bootstrap sample and storing it in a vector named `bootstrap_dist`
+3) repeating this process 10,000 times. 
+
+Then plot a histogram of the bootstrap distribution and calculate the bootstrap standard error $SE*$ and store it in an object called `SE_boot`
+
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+
+
+# get the sample size
+
+
+# run a for loop to generate the bootstrap distribution 
+
+
+
+
+# create a histogram of the bootstrap distribution
+
+
+
+# calculate the bootstrap standard error
+
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.2** 
+
+Let's use the bootstrap standard error you to now calculate a 95% confidence interval using the formula:  
+
+$CI_b = \bar{x} \pm  2 \cdot SE*$. 
+
+
+We can also use the quantile() function to get a 95% confidence interval.
+
+
+
+```{r}
+
+
+# get the statistic of interest (e.g., the mean)
+
+
+
+# use the formula to get the bootstrap confidence interval
+
+
+
+# also get the CIs using quantiles...
+
+
+
+```
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 1.3**  We can also calculate confidence intervals for the mean $\mu$ using the formula:
+
+$CI = \bar{x} \pm 2 \cdot SE$
+
+where SE is given by the formula $SE = \frac{s}{\sqrt{n}}$ and  *s* is the standard deviation of the sample and *n* is the sample size. 
+
+
+```{r}
+
+# calculate the standard error
+
+
+
+
+# create the confidence interval
+
+
+
+
+
+```
+
+
+
+
+
+$\\$
+
+
+
+
+**Part 1.4** The value of 2 in the equation for the the confidence interval $CI = \bar{x} \pm 2 \cdot SE$ is an approximate value. We can get a more precise confidence interval if we use the quantile value from a t-distribution with n-1 degrees of freedom, i.e. we should use the formula $CI = \bar{x} \pm t^* \cdot SE$. 
+
+We can get such a quantile value $t^*$ from a t-distribution in R using the `qt(p, df)` function:
+
+
+
+```{r}
+
+
+# get the quantile value from a t-distribution
+
+
+
+# calculate the CI using this quantile value
+
+
+
+```
+
+
+
