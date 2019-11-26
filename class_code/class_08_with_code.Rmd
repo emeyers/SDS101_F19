@@ -1,0 +1,214 @@
+---
+title: "Class 8 notes and code"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+
+
+$\\$
+
+
+
+
+
+```{r setup, include=FALSE}
+
+# install.packages("latex2exp")
+
+library(latex2exp)
+
+
+#options(scipen=999)
+
+
+knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(123)
+
+```
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+
+
+
+## Part 1: Using the bootstrap to create confidence intervals
+
+
+Let's create a confidence interval for the mean amount of weight ($\mu_{light}$) that we would expect our mice in the light group to put on using the bootstrap. 
+
+
+
+```{r}
+
+# download_class_data("mice.Rda")
+
+# load the data
+load("mice.Rda")
+
+
+```
+
+
+
+
+$\\$
+
+
+
+**Part 1.1**  Use a for loop to create a bootstrap distribution by: 
+
+1) sampling with replacement *n* values from light weight gain group
+2) calculating the mean of the bootstrap sample and storing it in a vector named `bootstrap_dist`
+3) repeating this process 10,000 times. 
+
+Then plot a histogram of the bootstrap distribution and calculate the bootstrap standard error $SE*$ and store it in an object called `SE_boot`
+
+```{r message=FALSE, warning=FALSE, tidy=TRUE}
+
+
+# get the sample size
+n_sample_size <- length(light_BM_increase)
+
+
+# run a for loop to generate the bootstrap distribution 
+bootstrap_dist <- NULL
+for (i in 1:10000) {    
+  
+  curr_boot <- sample(light_BM_increase, n_sample_size, replace = TRUE)  
+  bootstrap_dist[i] <-  mean(curr_boot)  
+  
+}
+
+
+# create a histogram of the bootstrap distribution
+hist(bootstrap_dist, nclass = 100, main = "Bootstrap distribution of mean weight gains", xlab = "Mice mean weight gains x-bar")
+
+
+# calculate the bootstrap standard error
+SE_boot <- sd(bootstrap_dist)
+SE_boot
+
+
+
+
+```
+
+
+
+$\\$
+
+
+
+
+
+
+**Part 1.2** 
+
+Let's use the bootstrap standard error you to now calculate a 95% confidence interval using the formula:  
+
+$CI_b = \bar{x} \pm  2 \cdot SE*$. 
+
+
+We can also use the quantile() function to get a 95% confidence interval.
+
+
+
+```{r}
+
+
+the_stat <- mean(light_BM_increase)
+
+
+# use the formula to get the bootstrap confidence interval
+CI <- the_stat + 2 * SE_boot * c(-1, 1)
+CI
+
+
+# also get the CIs using quantiles...
+quantile(bootstrap_dist, c(.025, .975))
+
+
+```
+
+
+
+
+
+
+
+
+$\\$
+
+
+
+
+
+
+
+**Part 1.3**  We can also calculate confidence intervals for the mean $\mu$ using the formula:
+
+$CI = \bar{x} \pm 2 \cdot SE$
+
+where SE is given by the formula $SE = \frac{s}{\sqrt{n}}$ and  *s* is the standard deviation of the sample and *n* is the sample size. 
+
+
+```{r}
+
+# calculate the standard error
+the_sd <- sd(light_BM_increase)
+the_se <- the_sd/sqrt(n_sample_size)
+
+# create the confidence interval
+(CI_formula <- the_stat + c(-2, 2) * the_se)
+
+
+
+
+```
+
+
+
+
+
+$\\$
+
+
+
+
+**Part 1.4** The value of 2 in the equation for the the confidence interval $CI = \bar{x} \pm 2 \cdot SE$ is an approximate value. We can get a more precise confidence interval if we use the quantile value from a t-distribution with n-1 degrees of freedom, i.e. we should use the formula $CI = \bar{x} \pm t^* \cdot SE$. 
+
+We can get such a quantile value $t^*$ from a t-distribution in R using the `qt(p, df)` function:
+
+
+
+```{r}
+
+
+# get the quantile value from a t-distribution
+(t_star <- qt(.975, df = n_sample_size - 1))
+
+
+# calculate the CI using this quantile value
+(CI_formula2 <- the_stat + c(-t_star, t_star) * the_se)
+
+
+```
+
+
+
